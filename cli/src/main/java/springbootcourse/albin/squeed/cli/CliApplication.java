@@ -14,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.IntStream;
 
 @SpringBootApplication
 public class CliApplication {
@@ -28,14 +30,14 @@ public class CliApplication {
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
-			LOG.info("Starting CLI Application");
+
 			ResponseEntity<List<Room>> rooms = restTemplate.exchange("http://localhost:8080/api/rooms", HttpMethod.GET, null, new ParameterizedTypeReference<List<Room>>() {
 			});
 
-			rooms.getBody().forEach(room -> {
-				LOG.info(room.toString());
-			});
-			LOG.info("Finishing CLI Application");
+			Objects.requireNonNull(rooms.getBody()).forEach(room ->
+				LOG.info(room.toString())
+			);
+
 		};
 	}
 	public static void main(String[] args) {
